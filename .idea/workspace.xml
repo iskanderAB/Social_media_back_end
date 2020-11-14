@@ -3,6 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="db0d3969-6b70-4130-94a1-cb26aafcb754" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/migrations/Version20201112010146.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Document.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Document.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Poste.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/User.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -156,7 +160,10 @@
       <workItem from="1605177467705" duration="4227000" />
       <workItem from="1605192470882" duration="1849000" />
       <workItem from="1605194421848" duration="857000" />
-      <workItem from="1605225542131" duration="5880000" />
+      <workItem from="1605225542131" duration="6506000" />
+      <workItem from="1605259135911" duration="418000" />
+      <workItem from="1605273030777" duration="2899000" />
+      <workItem from="1605394475752" duration="2043000" />
     </task>
     <servers />
   </component>
@@ -168,5 +175,9 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="493" y="248" key="#Composer/0.0.1366.738@0.0.1366.738" timestamp="1605112105892" />
+    <state x="413" y="123" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog" timestamp="1605395151183">
+      <screen x="0" y="0" width="1366" height="738" />
+    </state>
+    <state x="413" y="123" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/0.0.1366.738@0.0.1366.738" timestamp="1605395151183" />
   </component>
 </project>
