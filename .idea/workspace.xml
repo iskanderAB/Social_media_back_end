@@ -4,7 +4,6 @@
     <list default="true" id="db0d3969-6b70-4130-94a1-cb26aafcb754" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Controller/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/UserController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/Post.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Post.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -165,7 +164,7 @@
       <workItem from="1605447762925" duration="375000" />
       <workItem from="1605449873380" duration="3801000" />
       <workItem from="1605543159200" duration="2534000" />
-      <workItem from="1605626188711" duration="2856000" />
+      <workItem from="1605626188711" duration="8897000" />
     </task>
     <servers />
   </component>

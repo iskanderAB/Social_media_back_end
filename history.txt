@@ -1,0 +1,18 @@
+git add . 
+git commit -m "user api " 
+git push 
+cls 
+curl -X POST -H "Content-Type: application/json"   http://127.0.0.1:8000/api/addUser -d '{"email" :"iskander@gmailcom","password":"0" }'
+curl -X POST -H "Content-Type: applicati
+cls
+curl -X POST -H "Content-Type: application/json" http://localhost/api/login_check -d '{"username":"user0@gmail.com","password":"0"}'
+curl -X POST -H "Content-Type:application/json" http://localhost/api/login_check -d '{"username":"user0@gmail.com","password":"0"}'
+curl -X POST -H "Content-Type:application/json" http://127.0.0.1:8000/api/login_check -d '{"username":"user0@gmail.com","password":"0"}'
+curl -X POST -H "Content-Type : application/json" http://127.0.0.1:8000/api/login_check -d '{"username":"user0@gmail.com","password":"0"}'
+curl -X POST -H "Content-Type: application/json" http://127.0.0.1:8000/api/login_check -d '{"username":"user0@gmail.com","password":"0"}'
+curl -X POST -H "Content-Type:application/json" http://localhost/api/login_check -d '{"username":"user0@gmail.com","password":"0"}'
+cls
+history
+hist
+cls
+doskey /HISTORY > history.txt

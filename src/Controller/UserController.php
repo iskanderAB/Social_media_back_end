@@ -29,7 +29,7 @@ class UserController extends AbstractController
         return $this->json($users , 200,[] ,['groups' => 'read_user']);
     }
     /**
-     * @Route("/addUser" , name="addUser",methods={POST})
+     * @Route("/addUser",name="addUser",methods={"POST"})
      */
     public function addUser(Request $request ,ValidatorInterface $validator , SerializerInterface $serializer, EntityManagerInterface $entityManager , UserPasswordEncoderInterface $encoder){
         $data = $request->getContent();
@@ -41,13 +41,20 @@ class UserController extends AbstractController
                     400
                 );
             }
+            /**
+             * @var $user User
+             */
             $user= $serializer->deserialize($data,User::class,'json');
             $error = $validator->validate($user);
             if (count($error)>0){
                 return $this->json(
                     $error, 400);
             }
-
+            $user->setPassword($encoder->encodePassword($user,$user->getPassword()));
+            $user->setRoles(['ROLE_USER']);
+            $entityManager->persist($user);
+            $entityManager->flush();
+            return $this->json(["message" => "user added ! ", "status" => "201"] , 201) ;
         }catch (NotEncodableValueException $exception){
             return $this->json(
                 ['message' => $exception->getMessage() ,
