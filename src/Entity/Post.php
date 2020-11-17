@@ -104,8 +104,6 @@ class Post
         return $this;
     }
 
-
-
     public function getCreatedBy(): ?User
     {
         return $this->createdBy;
@@ -138,7 +136,6 @@ class Post
     public function removeInterested(User $interested): self
     {
         $this->interested->removeElement($interested);
-
         return $this;
     }
 }
