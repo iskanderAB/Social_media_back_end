@@ -21,12 +21,14 @@ class User implements UserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Groups({"read_user"})
+     * @Groups("post_reader")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Groups({"read_user"})
+     * @Groups("post_reader")
      */
     private $email;
 
@@ -41,8 +43,6 @@ class User implements UserInterface
      * @ORM\Column(type="string")
      */
     private $password;
-
-
 
     /**
      * @ORM\OneToMany(targetEntity=Post::class, mappedBy="createdBy")
