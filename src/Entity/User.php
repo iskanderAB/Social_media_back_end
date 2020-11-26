@@ -59,6 +59,31 @@ class User implements UserInterface
      */
     private $interests;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $nom;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $prenom;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $telephone;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $classe;
+
+    /**
+     * @ORM\Column(type="string", length=1000, nullable=true)
+     */
+    private $image;
+
     public function __construct(){
         $this->posts = new ArrayCollection();
         $this->documents = new ArrayCollection();
@@ -227,6 +252,66 @@ class User implements UserInterface
         if ($this->interests->removeElement($interest)) {
             $interest->removeInterested($this);
         }
+
+        return $this;
+    }
+
+    public function getNom(): ?string
+    {
+        return $this->nom;
+    }
+
+    public function setNom(?string $nom): self
+    {
+        $this->nom = $nom;
+
+        return $this;
+    }
+
+    public function getPrenom(): ?string
+    {
+        return $this->prenom;
+    }
+
+    public function setPrenom(string $prenom): self
+    {
+        $this->prenom = $prenom;
+
+        return $this;
+    }
+
+    public function getTelephone(): ?int
+    {
+        return $this->telephone;
+    }
+
+    public function setTelephone(?int $telephone): self
+    {
+        $this->telephone = $telephone;
+
+        return $this;
+    }
+
+    public function getClasse(): ?string
+    {
+        return $this->classe;
+    }
+
+    public function setClasse(string $classe): self
+    {
+        $this->classe = $classe;
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): self
+    {
+        $this->image = $image;
 
         return $this;
     }

@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
+use App\Service\converter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,26 +42,29 @@ class UserController extends AbstractController
                     400
                 );
             }
-            /**
-             * @var $user User
-             */
+
             $user= $serializer->deserialize($data,User::class,'json');
+            $converter = new converter();
+            $file = $converter->base64ToImage($user->getImage(),uniqid().'.jpg',$this->getParameter('UplodImageUser'));
+            $user->setImage($this->getParameter('UplodImageUser').'/'.uniqid().'.jpg');
             $error = $validator->validate($user);
             if (count($error)>0){
                 return $this->json(
-                    $error, 400);
+                    ['message'=> $error],400);
             }
+            
             $user->setPassword($encoder->encodePassword($user,$user->getPassword()));
             $user->setRoles(['ROLE_USER']);
             $entityManager->persist($user);
             $entityManager->flush();
-            return $this->json(["message" => "user added ! ", "status" => "201"] , 201) ;
+            return $this->json(["message" => "user added ! ", "status" => "201"] , 201);
         }catch (NotEncodableValueException $exception){
             return $this->json(
-                ['message' => $exception->getMessage() ,
+                ['message' => $exception->getMessage(),
                 'status'=>400],
                 400
             );
         }
     }
+
 }
