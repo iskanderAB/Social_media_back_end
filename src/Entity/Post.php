@@ -51,6 +51,30 @@ class Post
      */
     private $interested;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups("post_reader")
+     */
+    private $title;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     * @Groups("post_reader")
+     */
+    private $createdAt;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     * @Groups("post_reader")
+     */
+    private $date;
+
+    /**
+     * @ORM\Column(type="string", length=1000, nullable=true)
+     * @Groups("post_reader")
+     */
+    private $image;
+
     public function __construct()
     {
         $this->documents = new ArrayCollection();
@@ -142,6 +166,54 @@ class Post
     public function removeInterested(User $interested): self
     {
         $this->interested->removeElement($interested);
+        return $this;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(?string $title): self
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(?\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
+
+    public function setDate(?\DateTimeInterface $date): self
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): self
+    {
+        $this->image = $image;
+
         return $this;
     }
 }

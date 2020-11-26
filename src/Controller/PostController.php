@@ -4,14 +4,15 @@ namespace App\Controller;
 
 
 use App\Entity\Post;
+use App\Service\converter;
 use App\Repository\PosteRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Route("/api")
@@ -32,6 +33,10 @@ class PostController extends AbstractController
              * @var  $post Post
              */
             $post->setCreatedBy($this->getUser());
+            $post->setCreatedAt(new \DateTime());
+            $converter = new converter();
+            // $file = $converter->base64ToImage($user->getImage(),uniqid().'.jpg',$this->getParameter('UplodImageUser'));
+            $post->setImage($converter->base64ToImage($post->getImage(),uniqid().'.jpg',$this->getParameter('UploadPosUser')));
             $error = $validator->validate($post);
             if (count($error)>0){
                 return $this->json(['message' => 'bad request body !'],401);
@@ -93,7 +98,6 @@ class PostController extends AbstractController
             $post->setContent($postData['content']);
             echo 'hello';
         }
-
         $manager->flush();
         return $this->json([
             'message' => 'post updated',

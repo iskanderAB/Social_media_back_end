@@ -35,6 +35,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="json")
      * @Groups({"read_user"})
+     * 
      */
     private $roles = [];
 
@@ -61,26 +62,34 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"read_user"})
+     * @Groups("post_reader")
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"read_user"})
+     * @Groups("post_reader")
      */
     private $prenom;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"read_user"})
      */
     private $telephone;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"read_user"})
      */
     private $classe;
 
     /**
      * @ORM\Column(type="string", length=1000, nullable=true)
+     * @Groups({"read_user"})
+     * @Groups("post_reader")
      */
     private $image;
 

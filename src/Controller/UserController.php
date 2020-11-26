@@ -21,6 +21,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UserController extends AbstractController
 {
+
+    
     /**
      * @Route("/users",name="getUsers",methods={"GET"})
      * @param UserRepository $userRepository
@@ -42,17 +44,15 @@ class UserController extends AbstractController
                     400
                 );
             }
-
             $user= $serializer->deserialize($data,User::class,'json');
             $converter = new converter();
-            $file = $converter->base64ToImage($user->getImage(),uniqid().'.jpg',$this->getParameter('UplodImageUser'));
-            $user->setImage($this->getParameter('UplodImageUser').'/'.uniqid().'.jpg');
+            // $file = $converter->base64ToImage($user->getImage(),uniqid().'.jpg',$this->getParameter('UplodImageUser'));
+            $user->setImage($converter->base64ToImage($user->getImage(),uniqid().'.jpg',$this->getParameter('UplodImageUser')));
             $error = $validator->validate($user);
             if (count($error)>0){
                 return $this->json(
                     ['message'=> $error],400);
             }
-            
             $user->setPassword($encoder->encodePassword($user,$user->getPassword()));
             $user->setRoles(['ROLE_USER']);
             $entityManager->persist($user);
@@ -65,6 +65,21 @@ class UserController extends AbstractController
                 400
             );
         }
+    }
+    /**
+     * @Route("/user", name="getUser", methods={"GET"})
+     */
+    public function getOneUser(Request $request)
+    {
+        // $token = new TokenDecoder($request);
+        // $roles = $token->getRoles();
+        // if (!in_array('ROLE_ADMIN', $roles, true)) {
+        //     return $this->json([
+        //         'message' => 'access denied !',
+        //         'status' => 403
+        //     ], 403);
+        // }
+        return $this->json($this->getUser(), 200, [], ['groups' => 'read_user']);
     }
 
 }
