@@ -13,7 +13,19 @@ class converter
         $file=fopen($dist.'/'.$fileName, 'wb');
         fwrite($file, base64_decode($base64));
         fclose($file);
-        var_dump( 'iskander file =>  ' . $fileName);
+        //var_dump( 'iskander file =>  ' . $fileName);
+        return $fileName ; 
+    }
+
+
+    public function base64ToPDF($base64_string, $output_file,$dist){
+        $ext='.pdf';
+        $fileName='PDF'.uniqid().$ext;
+        $base64=str_replace('data:application/pdf;base64,', '', $base64_string);
+        $file=fopen($dist.'/'.$fileName, 'wb');
+        fwrite($file, base64_decode($base64));
+        fclose($file);
+        //var_dump( 'iskander file =>  ' . $fileName);
         return $fileName ; 
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-
+use App\Entity\Document;
 use App\Entity\Post;
 use App\Service\converter;
 use App\Repository\PosteRepository;
@@ -28,15 +28,23 @@ class PostController extends AbstractController
             if(!$request->headers->get('Content-Type') === 'application/json'){
                 return $this->json(["message" => "bad request content type !"],401);
             }
+            $converter = new converter();
+            $data = json_decode($data , true);
+            $document= $data['document']; 
+            unset($data['document']);
+            $data = json_encode($data);
+            $converter->base64ToPDF($document,uniqid().'.pdf',$this->getParameter('UploadPostUser'));
+            //return $this->json($document, 201);
             $post = $serializer->deserialize($data , Post::class ,'json');
             /**
              * @var  $post Post
              */
             $post->setCreatedBy($this->getUser());
             $post->setCreatedAt(new \DateTime());
-            $converter = new converter();
             // $file = $converter->base64ToImage($user->getImage(),uniqid().'.jpg',$this->getParameter('UplodImageUser'));
-            $post->setImage($converter->base64ToImage($post->getImage(),uniqid().'.jpg',$this->getParameter('UploadPosUser')));
+            if($post->getImage())
+                $post->setImage($converter->base64ToImage($post->getImage(),uniqid().'.jpg',$this->getParameter('UploadPostUser')));
+            //var_dump($post);
             $error = $validator->validate($post);
             if (count($error)>0){
                 return $this->json(['message' => 'bad request body !'],401);
@@ -77,7 +85,7 @@ class PostController extends AbstractController
     /**
      * @Route("/update/post/{id}", name="update_post", methods={"PUT"})
      */
-    public function updateBook(Post $post = null,Request $request, EntityManagerInterface $manager)
+    public function updatePost(Post $post = null,Request $request, EntityManagerInterface $manager)
     {
         if (!$post) {
             return $this->json([

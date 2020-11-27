@@ -5,7 +5,7 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     UplodImageUser: '%kernel.project_dir%/public/upload/user'
-    UploadPosUser: '%kernel.project_dir%/public/upload/user/posts'
+    UploadPostUser: '%kernel.project_dir%/public/upload/user/posts'
 
 services:
     # default configuration for services in *this* file
