@@ -22,6 +22,10 @@ class AppFixtures extends Fixture
         for($i =0 ; $i<10 ; $i++){
             $user = new User();
             $user->setEmail('user' . $i . '@gmail.com')
+                 ->setPrenom('user'.$i)  
+                 ->setNom('userNom'.$i) 
+                 ->setClasse('DSI'.$i)
+                 ->setTelephone('2515457'.$i)
                  ->setPassword($this->hash->encodePassword($user,'0'))
                  ->setRoles(['ROLE_USER']);
             $manager->persist($user);

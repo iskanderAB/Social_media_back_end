@@ -1,85 +1,94 @@
 <?php
+
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\UserType;
 use App\Repository\UserRepository;
-use App\Service\converter;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Serializer\Exception\NotEncodableValueException;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
- * Class UserController
- * @package App\Controller
- * @Route("/api")
+ * @Route("/user")
  */
-
 class UserController extends AbstractController
 {
-
-    
     /**
-     * @Route("/users",name="getUsers",methods={"GET"})
-     * @param UserRepository $userRepository
+     * @Route("/", name="user_index", methods={"GET"})
      */
-    public function getUsers(UserRepository $userRepository){
-        $users = $userRepository->findAll();
-        return $this->json($users , 200,[] ,['groups' => 'read_user']);
+    public function index(UserRepository $userRepository): Response
+    {
+        return $this->render('user/index.html.twig', [
+            'users' => $userRepository->findAll(),
+        ]);
     }
+
     /**
-     * @Route("/addUser",name="addUser",methods={"POST"})
+     * @Route("/new", name="user_new", methods={"GET","POST"})
      */
-    public function addUser(Request $request ,ValidatorInterface $validator , SerializerInterface $serializer, EntityManagerInterface $entityManager , UserPasswordEncoderInterface $encoder){
-        $data = $request->getContent();
-        try {
-            if($request->headers->get('Content-Type') !== 'application/json'){
-                return $this->json([
-                    'message' => 'bad request content !'
-                    ],
-                    400
-                );
-            }
-            $user= $serializer->deserialize($data,User::class,'json');
-            $converter = new converter();
-            // $file = $converter->base64ToImage($user->getImage(),uniqid().'.jpg',$this->getParameter('UplodImageUser'));
-            $user->setImage($converter->base64ToImage($user->getImage(),uniqid().'.jpg',$this->getParameter('UplodImageUser')));
-            $error = $validator->validate($user);
-            if (count($error)>0){
-                return $this->json(
-                    ['message'=> $error],400);
-            }
-            $user->setPassword($encoder->encodePassword($user,$user->getPassword()));
-            $user->setRoles(['ROLE_USER']);
+    public function new(Request $request): Response
+    {
+        $user = new User();
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
-            return $this->json(["message" => "user added ! ", "status" => "201"] , 201);
-        }catch (NotEncodableValueException $exception){
-            return $this->json(
-                ['message' => $exception->getMessage(),
-                'status'=>400],
-                400
-            );
+
+            return $this->redirectToRoute('user_index');
         }
-    }
-    /**
-     * @Route("/user", name="getUser", methods={"GET"})
-     */
-    public function getOneUser(Request $request)
-    {
-        // $token = new TokenDecoder($request);
-        // $roles = $token->getRoles();
-        // if (!in_array('ROLE_ADMIN', $roles, true)) {
-        //     return $this->json([
-        //         'message' => 'access denied !',
-        //         'status' => 403
-        //     ], 403);
-        // }
-        return $this->json($this->getUser(), 200, [], ['groups' => 'read_user']);
+
+        return $this->render('user/new.html.twig', [
+            'user' => $user,
+            'form' => $form->createView(),
+        ]);
     }
 
+    /**
+     * @Route("/{id}", name="user_show", methods={"GET"})
+     */
+    public function show(User $user): Response
+    {
+        return $this->render('user/show.html.twig', [
+            'user' => $user,
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/edit", name="user_edit", methods={"GET","POST"})
+     */
+    public function edit(Request $request, User $user): Response
+    {
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+
+            return $this->redirectToRoute('user_index');
+        }
+
+        return $this->render('user/edit.html.twig', [
+            'user' => $user,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/{id}", name="user_delete", methods={"DELETE"})
+     */
+    public function delete(Request $request, User $user): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($user);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('user_index');
+    }
 }
