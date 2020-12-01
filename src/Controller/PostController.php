@@ -21,9 +21,11 @@ class PostController extends AbstractController
      */
     public function index(PostRepository $postRepository,UserRepository $userRepository): Response
     {
+        //dd($this->getUser()->getRoles());
         return $this->render('post/index.html.twig', [
             'posts' => $postRepository->findAll(),
-            'users' => $userRepository->findAll()
+            'users' => $userRepository->findAll(),
+            'etudiants' =>  $userRepository->findByRole('ROLE_USER')
         ]);
     }
 

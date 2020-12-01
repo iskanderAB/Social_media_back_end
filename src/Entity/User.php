@@ -93,10 +93,16 @@ class User implements UserInterface
      */
     private $image;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Post::class, mappedBy="Lovers")
+     */
+    private $loves;
+
     public function __construct(){
         $this->posts = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->interests = new ArrayCollection();
+        $this->loves = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -321,6 +327,33 @@ class User implements UserInterface
     public function setImage(?string $image): self
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Post[]
+     */
+    public function getLoves(): Collection
+    {
+        return $this->loves;
+    }
+
+    public function addLove(Post $love): self
+    {
+        if (!$this->loves->contains($love)) {
+            $this->loves[] = $love;
+            $love->addLover($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLove(Post $love): self
+    {
+        if ($this->loves->removeElement($love)) {
+            $love->removeLover($this);
+        }
 
         return $this;
     }

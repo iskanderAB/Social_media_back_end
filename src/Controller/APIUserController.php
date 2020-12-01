@@ -1,10 +1,13 @@
 <?php
 namespace App\Controller;
 
+use App\Entity\Post;
 use App\Entity\User;
+use App\Repository\PostRepository;
 use App\Repository\UserRepository;
 use App\Service\converter;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -81,5 +84,24 @@ class APIUserController extends AbstractController
         // }
         return $this->json($this->getUser(), 200, [], ['groups' => 'read_user']);
     }
-
+    
+    /**
+     * @Route("/love",name="love",methods={"POST"} )
+     */
+    public function love(Request $request) {
+        $data = $request->getContent();
+        $id = json_decode($data)->postId;
+        $post = $this->getDoctrine()
+        ->getRepository(Post::class)
+        ->find($id);
+        if($this->getUser()->getLoves()->contains($post)){
+            $this->getUser()->removeLove($post);   
+            var_dump('true ');
+        }else{
+            $this->getUser()->addLove($post);   
+            var_dump('false ');
+        }
+        $this->getDoctrine()->getManager()->flush();
+        return $this->json(["message" => "love" , "status" => 200] , 200);
+    }
 }

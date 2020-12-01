@@ -75,10 +75,16 @@ class Post
      */
     private $image;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="loves")
+     */
+    private $Lovers;
+
     public function __construct()
     {
         $this->documents = new ArrayCollection();
         $this->interested = new ArrayCollection();
+        $this->Lovers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -213,6 +219,30 @@ class Post
     public function setImage(?string $image): self
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getLovers(): Collection
+    {
+        return $this->Lovers;
+    }
+
+    public function addLover(User $lover): self
+    {
+        if (!$this->Lovers->contains($lover)) {
+            $this->Lovers[] = $lover;
+        }
+
+        return $this;
+    }
+
+    public function removeLover(User $lover): self
+    {
+        $this->Lovers->removeElement($lover);
 
         return $this;
     }

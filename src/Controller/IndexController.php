@@ -2,19 +2,24 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Repository\PostRepository;
+use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class IndexController extends AbstractController
 {
     /**
-     * @Route("/", name="index")
+     * @Route("/" , methods={"GET"})
      */
-    public function index(): Response
+    public function index(PostRepository $postRepository,UserRepository $userRepository): Response
     {
-        return $this->render('index/index.html.twig', [
-            'controller_name' => 'IndexController',
+        //dd($this->getUser()->getRoles());
+        return $this->render('post/index.html.twig', [
+            'posts' => $postRepository->findAll(),
+            'users' => $userRepository->findAll(),
+            'etudiants' =>  $userRepository->findByRole('ROLE_USER')
         ]);
     }
 }
