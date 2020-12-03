@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Repository\PostRepository;
 use App\Repository\UserRepository;
 use App\Service\converter;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -69,6 +70,12 @@ class APIUserController extends AbstractController
             );
         }
     }
+
+
+
+
+
+
     /**
      * @Route("/user", name="getUser", methods={"GET"})
      */
@@ -96,12 +103,29 @@ class APIUserController extends AbstractController
         ->find($id);
         if($this->getUser()->getLoves()->contains($post)){
             $this->getUser()->removeLove($post);   
-            var_dump('true ');
         }else{
             $this->getUser()->addLove($post);   
-            var_dump('false ');
         }
         $this->getDoctrine()->getManager()->flush();
         return $this->json(["message" => "love" , "status" => 200] , 200);
+    }
+    /**
+     * @Route("/participate" , name="participate",methods={"POST"})
+     */
+    public function participate(Request $request){
+        $data = $request->getContent();
+        $id = json_decode($data)->postId;
+        $post = $this->getDoctrine()
+        ->getRepository(Post::class)
+        ->find($id);
+        if($this->getUser()->getInterests()->contains($post)){
+            $this->getUser()->removeInterest($post);   
+            // var_dump('true');
+        }else{
+            $this->getUser()->addInterest($post);   
+            //var_dump('false ');
+        }
+        $this->getDoctrine()->getManager()->flush();
+        return $this->json(["message" => "interrest" , "status" => 200] , 200);
     }
 }

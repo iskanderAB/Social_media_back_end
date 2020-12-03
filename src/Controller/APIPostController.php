@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Document;
 use App\Entity\Post;
 use App\Service\converter;
+use DateTime;
 use App\Repository\PosteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -113,6 +114,61 @@ class APIPostController extends AbstractController
         ],200);
     }
 
+    /**
+     * @Route("/post/{id}", name="edit_post", methods={"PUT"})
+     */
+    public function editOnePost(Post $post = null, ValidatorInterface $validator , Request $request, EntityManagerInterface $manager)
+    {
+        if (!$post) {
+            return $this->json([
+                'message' => 'user not found !',
+                'status' => 404
+            ], 404);
+        }
+
+        $tabData = json_decode($request->getContent(), true);
+        if ($tabData === null || $request->headers->get('Content-Type') !== 'application/json') {
+            return $this->json([
+                'message' => 'bad request !',
+                'status' => 400
+            ], 400);
+        }
+        if (isset($tabData['content'])) {
+            $post->setContent($tabData['content']);
+        }
+        if (isset($tabData['title'])) {
+            $post->setTitle($tabData['title']);
+        }
+        if (isset($tabData['date'])) {
+            $post->setDate(new DateTime($tabData['date']));
+        }
+        $manager->persist($post);
+        $manager->flush();
+
+        return $this->json([
+            'message' => 'post updated',
+            'status' => 200
+        ], 200);
+    }
+
+
+        /**
+     * @Route("/post/{id}", name="delete_post", methods={"DELETE"})
+     */
+    public function deleteOnePost(Post $post = null, Request $request, EntityManagerInterface $manager)
+    {
+        if (!$post) {
+            return $this->json([
+                'message' => 'user not found !',
+                'status' => 404
+            ], 404);
+        }
+        $manager->remove($post);
+        $manager->flush();
+        return $this->json([
+            'message' => 'post deleted',
+            'status' => 200
+        ], 200);
+    }
+
 }
-
-

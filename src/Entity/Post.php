@@ -2,10 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\PostRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\Document;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\PostRepository;
+use Doctrine\ORM\Mapping\JoinTable;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
@@ -52,6 +55,16 @@ class Post
     private $interested;
 
     /**
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="loves")
+     * @JoinTable(name="loves_users",
+     *   joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")},
+     *   inverseJoinColumns={@JoinColumn(name="post_id", referencedColumnName="id", unique=true)}
+     * )
+     * @Groups("post_reader")
+     */
+    private $Lovers;
+
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups("post_reader")
      */
@@ -75,10 +88,7 @@ class Post
      */
     private $image;
 
-    /**
-     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="loves")
-     */
-    private $Lovers;
+
 
     public function __construct()
     {
