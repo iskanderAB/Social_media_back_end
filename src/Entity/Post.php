@@ -57,8 +57,8 @@ class Post
     /**
      * @ORM\ManyToMany(targetEntity=User::class, inversedBy="loves")
      * @JoinTable(name="loves_users",
-     *   joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")},
-     *   inverseJoinColumns={@JoinColumn(name="post_id", referencedColumnName="id", unique=true)}
+     *   joinColumns={@JoinColumn(name="post_id", referencedColumnName="id")},
+     *   inverseJoinColumns={@JoinColumn(name="user_id", referencedColumnName="id")}
      * )
      * @Groups("post_reader")
      */
