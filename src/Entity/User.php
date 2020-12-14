@@ -100,6 +100,21 @@ class User implements UserInterface
      */
     private $image;
 
+    /**
+     * @ORM\Column(type="string", length=1000, nullable=true)
+     */
+    private $tokenNotification;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $blockNotification;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Stat::class, cascade={"persist", "remove"})
+     */
+    private $stat;
+
 
 
     public function __construct(){
@@ -358,6 +373,42 @@ class User implements UserInterface
         if ($this->loves->removeElement($love)) {
             $love->removeLover($this);
         }
+
+        return $this;
+    }
+
+    public function getTokenNotification(): ?string
+    {
+        return $this->tokenNotification;
+    }
+
+    public function setTokenNotification(?string $tokenNotification): self
+    {
+        $this->tokenNotification = $tokenNotification;
+
+        return $this;
+    }
+
+    public function getBlockNotification(): ?bool
+    {
+        return $this->blockNotification;
+    }
+
+    public function setBlockNotification(?bool $blockNotification): self
+    {
+        $this->blockNotification = $blockNotification;
+
+        return $this;
+    }
+
+    public function getStat(): ?Stat
+    {
+        return $this->stat;
+    }
+
+    public function setStat(?Stat $stat): self
+    {
+        $this->stat = $stat;
 
         return $this;
     }

@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Entity\Post;
+use App\Entity\Stat;
 use App\Entity\User;
 use App\Repository\PostRepository;
 use App\Repository\UserRepository;
@@ -14,8 +15,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * Class UserController
@@ -24,9 +27,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  */
 
 class APIUserController extends AbstractController
-{
-
-    
+{ 
     /**
      * @Route("/users",name="getUsers",methods={"GET"})
      * @param UserRepository $userRepository
@@ -49,6 +50,7 @@ class APIUserController extends AbstractController
                 );
             }
             $user= $serializer->deserialize($data,User::class,'json');
+            $user->setBlockNotification(false);
             $converter = new converter();
             // $file = $converter->base64ToImage($user->getImage(),uniqid().'.jpg',$this->getParameter('UplodImageUser'));
             $user->setImage($converter->base64ToImage($user->getImage(),uniqid().'.jpg',$this->getParameter('UplodImageUser')));
@@ -70,12 +72,7 @@ class APIUserController extends AbstractController
             );
         }
     }
-
-
-
-
-
-
+    
     /**
      * @Route("/user", name="getUser", methods={"GET"})
      */
@@ -127,5 +124,44 @@ class APIUserController extends AbstractController
         }
         $this->getDoctrine()->getManager()->flush();
         return $this->json(["message" => "interrest" , "status" => 200] , 200);
+    }
+
+    /**
+     * @Route("/setTokenNotification",name="setToknNotification",methods={"POST"} )
+     */
+    public function setToknNotification (Request $request){
+        $data = $request->getContent();
+        $token = json_decode($data)->tokenNotification;
+        $this->getUser()->setTokenNotification($token);
+        $this->getDoctrine()->getManager()->flush();
+        return $this->json(["message" => "TokenNotification" , "status" => 201] , 200);
+    }
+    //     /**
+    //  * @Route("/blockNotification",name="setToknNotification",methods={"POST"} )
+    //  */
+    // public function setToknNotification (Request $request){
+    //     $data = $request->getContent();
+    //     $token = json_decode($data)->tokenNotification;
+    //     $this->getUser()->setTokenNotification($token);
+    //     $this->getDoctrine()->getManager()->flush();
+    //     return $this->json(["message" => "TokenNotification" , "status" => 201] , 200);
+    // }
+    
+    /**
+     * @Route("/stat" , name="stat" ,methods={"POST","PUT"})
+     */
+    public function addUpdateStat(Request $request , SerializerInterface $serializer) {
+        $data = $request->getContent();
+        // var_dump($data);
+        try{
+            $stat = $serializer->deserialize($data,Stat::class,'json');
+            $this->getDoctrine()->getManager()->remove($this->getUser()->getStat());
+            $this->getUser()->setStat($stat);
+            $this->getDoctrine()->getManager()->persist($stat);
+            $this->getDoctrine()->getManager()->flush();
+            return $this->json(["message" => "stat added ! " , "status" => 201] , 200);
+        }catch(\Exception $e){
+            return $this->json(["message" => $e->getMessage() , "status" => 400] , 400);
+        }  
     }
 }

@@ -15,11 +15,17 @@ class IndexController extends AbstractController
      */
     public function index(PostRepository $postRepository,UserRepository $userRepository): Response
     {
-        //dd($this->getUser()->getRoles());
+        $filter = function ($user) { 
+            return $user->getStat() !== null ; 
+        };
+        $stats = array_filter($userRepository->findByRole('ROLE_USER') , $filter) ;
+        dump($this->getUser()->getPassword());
         return $this->render('post/index.html.twig', [
+            'user' => $this->getUser() , 
             'posts' => $postRepository->findAll(),
             'users' => $userRepository->findAll(),
-            'etudiants' =>  $userRepository->findByRole('ROLE_USER')
+            'etudiants' =>  $userRepository->findByRole('ROLE_USER'),
+            'stats' => $stats 
         ]);
     }
 }
