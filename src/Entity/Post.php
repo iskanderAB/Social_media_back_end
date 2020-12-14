@@ -88,6 +88,12 @@ class Post
      */
     private $image;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups("post_reader")
+     */
+    private $attachment;
+
 
 
     public function __construct()
@@ -253,6 +259,18 @@ class Post
     public function removeLover(User $lover): self
     {
         $this->Lovers->removeElement($lover);
+
+        return $this;
+    }
+
+    public function getAttachment(): ?string
+    {
+        return $this->attachment;
+    }
+
+    public function setAttachment(?string $attachment): self
+    {
+        $this->attachment = $attachment;
 
         return $this;
     }

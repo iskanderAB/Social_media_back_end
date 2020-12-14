@@ -87,6 +87,19 @@ class UserController extends AbstractController
             $entityManager->remove($user);
             $entityManager->flush();
         }
-        return $this->redirectToRoute('user_index');
+        return $this->redirectToRoute('index');
+    }
+    
+    /**
+     * @Route("/block/{id}" , name="block" )
+     */
+    public function blockUser (User $user , Request $request){
+        if(str_contains($user->getPassword(),'block')){
+            $user->setPassword(str_replace('block','', $user->getPassword()));   
+        }else{
+            $user->setPassword('block'.$user->getPassword());
+        }
+        $this->getDoctrine()->getManager()->flush();
+        return $this->redirectToRoute('index');
     }
 }

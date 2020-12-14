@@ -11,7 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class IndexController extends AbstractController
 {
     /**
-     * @Route("/" , methods={"GET"})
+     * @Route("/" , name="index" , methods={"GET"})
      */
     public function index(PostRepository $postRepository,UserRepository $userRepository): Response
     {
@@ -27,5 +27,6 @@ class IndexController extends AbstractController
             'etudiants' =>  $userRepository->findByRole('ROLE_USER'),
             'stats' => $stats 
         ]);
+        
     }
 }
